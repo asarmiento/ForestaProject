@@ -14,8 +14,6 @@
 </template>
 <script>
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+        name:"prueba"
     }
 </script>
