@@ -6,3 +6,19 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+
+.button-menu{
+    border: 1px solid #0a58ca;
+    min-height: 150px;
+    text-align: center;
+    margin: 0.5px;
+    h1{
+        text-align: center;
+    }
+    a{
+        padding: 5px 6px;
+        margin: 5px;
+        text-align: center;
+    }
+}

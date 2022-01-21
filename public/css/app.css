@@ -11286,3 +11286,17 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.button-menu {
+  border: 1px solid #0a58ca;
+  min-height: 150px;
+  text-align: center;
+  margin: 0.5px;
+}
+.button-menu h1, .button-menu .h1 {
+  text-align: center;
+}
+.button-menu a {
+  padding: 5px 6px;
+  margin: 5px;
+  text-align: center;
+}
