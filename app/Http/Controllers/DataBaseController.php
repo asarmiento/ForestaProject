@@ -175,7 +175,7 @@ mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sum
 
         // El documento generado es Word2007
         $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
-        $writer->save('reportePrueba.docx');
+        $writer->save('reporteUno.docx');
         return redirect()->back();
 
     }
@@ -277,7 +277,7 @@ mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sum
 
         // El documento generado es Word2007
         $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
-        $writer->save('reportePrueba.docx');
+        $writer->save('reporteDos.docx');
 
 return redirect()->back();
     }

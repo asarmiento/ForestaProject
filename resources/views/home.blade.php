@@ -63,8 +63,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn-success btn">Exportar</button>
+                    <button type="submit" class="btn-success btn m-3">Generar</button>
                 </form>
+                @if(file_exists('reporteUno.docx'))
+                <a class="btn btn-primary" href="{{asset('reporteUno.docx')}}">Descargar Archivo</a>
+                @endif
             </div>
             <div class="col-md-3 col-sm-12 button-menu">
                 <h1>Reporte de Tablas 2</h1>
@@ -78,8 +81,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn-success btn">Exportar</button>
+                    <button type="submit" class="btn-success btn m-3">Generar</button>
                 </form>
+                    @if(file_exists('reporteDos.docx'))
+                <a class="btn btn-primary" href="{{asset('reporteDos.docx')}}">Descargar Archivo</a>
+                        @endif
             </div>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
