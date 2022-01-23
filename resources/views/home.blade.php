@@ -33,7 +33,7 @@
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
                             @foreach(\App\Models\Farm::get() AS $data)
-                                <option value="{{$data->id}}">{{$data->owner}}</option>
+                                <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -59,7 +59,7 @@
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
                             @foreach(\App\Models\Farm::get() AS $data)
-                                <option value="{{$data->id}}">{{$data->owner}}</option>
+                                <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -77,7 +77,7 @@
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
                             @foreach(\App\Models\Farm::get() AS $data)
-                                <option value="{{$data->id}}">{{$data->owner}}</option>
+                                <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
                     </div>
