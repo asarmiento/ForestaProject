@@ -11,6 +11,7 @@ use App\Models\Farm;
 use App\Models\ForestDataBase;
 use App\Models\ScientificName;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -35,7 +36,7 @@ class DataBaseController extends Controller
     public function reportWord(Request $request)
     {
         $sysconf=Farm::find($request->get('farm_id'));
-
+Log::info(json_encode($sysconf));
         $phpWord=new PhpWord;
         // Establecer el estilo predeterminado
         $phpWord->setDefaultFontName('Times New Roma');                              //Fuente

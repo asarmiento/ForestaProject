@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\ImportNewExcelFarm;
 use App\Models\Family;
+use App\Models\Farm;
 use App\Models\ForestDataBase;
 use App\Models\ScientificName;
 use Illuminate\Http\Request;
@@ -22,6 +23,13 @@ class FarmController extends Controller
 
         Excel::import($import,$file['data_farm']);
         return redirect()->back();
+    }
+
+
+    public function listsFarms()
+    {
+        $list=Farm::orderBy('id_predio','ASC')->get();
+        return view('farms.lists',compact('list'));
     }
 
 

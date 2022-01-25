@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/lista-de-familias', [App\Http\Controllers\FarmController::class, 'listsFamily'])->name('listFamily');
+Route::get('/lista-de-fincas', [App\Http\Controllers\FarmController::class, 'listsFarms'])->name('listFarms');
 
 
 Route::post('/data_route', [App\Http\Controllers\FarmController::class, 'importStore'])->name('data_route');

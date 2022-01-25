@@ -32,7 +32,7 @@
                         <label>Clientes</label>
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
-                            @foreach(\App\Models\Farm::get() AS $data)
+                            @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->get() AS $data)
                                 <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
@@ -48,7 +48,7 @@
             <div class="col-md-3 col-sm-12 button-menu">
                 <h1>Fincas</h1>
                 <a class="btn-success btn">Crear</a>
-                <a class="btn-primary btn">Lista</a>
+                <a href="{{route('listFarms')}}" class="btn-primary btn">Lista</a>
                 <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn-success btn">importar</a>
             </div>
             <div class="col-md-3 col-sm-12 button-menu">
@@ -58,7 +58,7 @@
                         <label>Clientes</label>
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
-                            @foreach(\App\Models\Farm::get() AS $data)
+                            @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
                                 <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
@@ -76,7 +76,7 @@
                         <label>Clientes</label>
                         <select class="form-control" id="farm_id" name="farm_id" required>
                             <option value="">Seleccione un cliente</option>
-                            @foreach(\App\Models\Farm::get() AS $data)
+                            @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
                                 <option value="{{$data->id}}">{{$data->id_predio}}</option>
                             @endforeach
                         </select>
