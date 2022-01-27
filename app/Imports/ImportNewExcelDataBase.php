@@ -3,7 +3,9 @@
 namespace App\Imports;
 
 use App\Models\ForestDataBase;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -22,12 +24,16 @@ class ImportNewExcelDataBase implements ToCollection,WithHeadingRow
      */
     public function collection(Collection $collection)
     {
+
+
         foreach ($collection AS $coll) {
             //echo json_encode($coll); die;
 
-            $farm = new ForestDataBase;
+          $farm=new ForestDataBase;
+
             $farm->farm_id=$this->farm;
             $farm->vano=$coll['vano'];
+            $farm->year=Carbon::now()->year;
             $farm->tree=$coll['arbol'];
             $farm->family=$coll['familia'];
             $farm->name_cientifict=$coll['nombre_cientifico'];

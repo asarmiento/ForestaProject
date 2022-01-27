@@ -5,23 +5,31 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header bg-dark text-white">{{ __('Lista de Familias Nuevas') }}</div>
+                    <div class="card-header bg-dark text-white">{{ __('Lista de Nombre Científica Nuevas') }}</div>
 
                     <div class="card-body">
-        <div class="m-2"><a class="btn btn-success" href="{{route('get-family')}}" >Registar Nueva Familia</a></div>
+        <div class="m-2"><a class="btn btn-success" href="{{route('get-common')}}" >Registar Nueva Nombre Científico</a></div>
         <table class="table table-bordered ">
             <thead>
             <tr>
                 <th>id</th>
+                <th>Familia</th>
                 <th>Nombre</th>
+                <th>Tipo</th>
                 <th>Acción</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($list AS $item)
+            @foreach($list AS $key=>$item)
             <tr>
-                <td>{{$item->id}}</td>
+                <td>{{$key+1}}</td>
+                <td>{{$item->family->name}}</td>
                 <td>{{$item->name}}</td>
+                @if($item->commercial)
+                <td>Comercial</td>
+                @else
+                <td>No Comercial</td>
+                @endif
                 <td><a class="btn btn-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             </tr>
             @endforeach

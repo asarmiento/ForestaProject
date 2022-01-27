@@ -11290,7 +11290,6 @@ textarea.form-control-lg {
   border: 1px solid #0a58ca;
   min-height: 150px;
   text-align: center;
-  margin: 0.5px;
 }
 .button-menu h1, .button-menu .h1 {
   text-align: center;
@@ -11299,4 +11298,7 @@ textarea.form-control-lg {
   padding: 5px 6px;
   margin: 5px;
   text-align: center;
+}
+.button-menu button {
+  margin: 10px;
 }

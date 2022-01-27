@@ -10,7 +10,9 @@ use App\Imports\ImportNewExcelDataBase;
 use App\Models\Farm;
 use App\Models\ForestDataBase;
 use App\Models\ScientificName;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\IOFactory;
@@ -21,10 +23,21 @@ class DataBaseController extends Controller
 {
     use BoxTraits;
 
-
+    public function __construct()
+    {
+        $this->middleware('auth');
+}
     public function importStore(Request $request)
     {
+       // dd($request->get('reeplay'));
+        if(ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() && $request->get('reeplay') != 'on'){
 
+            return redirect('/home')->with('status','Esta base de datos ya existe si desea reemplazar marque el check');
+        }
+        if (ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() > 0 && $request->get('reeplay') == 'on') {
+            DB::statement("DELETE FROM `forest_database` WHERE farm_id = ".$request->get('farm_id')." AND year =".Carbon::now()->year);
+            //ForestDataBase::where('farm_id',$this->farm)->where('year',Carbon::now()->year)->get()->destroy();
+        }
         $file=$request->file();
         $import=new ImportNewExcelDataBase($request->get('farm_id'));
 
@@ -176,7 +189,7 @@ mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sum
 
         // El documento generado es Word2007
         $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
-        $writer->save('reporteUno.docx');
+        $writer->save('reporte_'.$sysconf->id_predio.'_uno.docx');
         return redirect()->back();
 
     }
@@ -1701,7 +1714,7 @@ if($report) {
             if($report) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
             }else{
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count();
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count();
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
