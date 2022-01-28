@@ -8,7 +8,7 @@
                     <div class="card-header bg-dark text-white">{{ __('Lista de Nombre Científica Nuevas') }}</div>
 
                     <div class="card-body">
-        <div class="m-2"><a class="btn btn-success" href="{{route('get-common')}}" >Registar Nueva Nombre Científico</a></div>
+        <div class="m-2"><a class="btn btn-success" href="{{route('get-scientific')}}" >Registar Nueva Nombre Científico</a></div>
         <table class="table table-bordered ">
             <thead>
             <tr>
@@ -30,7 +30,7 @@
                 @else
                 <td>No Comercial</td>
                 @endif
-                <td><a class="btn btn-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                <td><a class="btn btn-primary btn-sm" href="{{route('edit-scientific',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             </tr>
             @endforeach
             </tbody>

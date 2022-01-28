@@ -47,15 +47,16 @@
                                 </li>
                             @endif
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
+
                         @else
                             <li class="nav-item">
                                 <a class="nav-link" href="/home">Inicio</a>
                             </li>
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Nuevo Usuario') }}</a>
+                                </li>
+                            @endif
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -80,6 +81,18 @@
         </nav>
 
         <main class="py-4">
+            <div class="col-md-12">
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                @if (session('statusError'))
+                    <div class="alert alert-danger">
+                        {{ session('statusError') }}
+                    </div>
+                @endif
+            </div>
             @yield('content')
         </main>
     </div>

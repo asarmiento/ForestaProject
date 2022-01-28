@@ -18,11 +18,11 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($list AS $item)
+            @foreach($list AS $key =>$item)
             <tr>
-                <td>{{$item->id}}</td>
+                <td>{{$key+1}}</td>
                 <td>{{$item->name}}</td>
-                <td><a class="btn btn-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                <td><a class="btn btn-primary btn-sm" href="{{route('edit-farm',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             </tr>
             @endforeach
             </tbody>

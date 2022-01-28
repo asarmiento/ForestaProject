@@ -9,6 +9,11 @@ class ScientificName extends Entity
     protected $table = 'scientific_names';
     protected $fillable = ['name', 'commercial', 'family_id'];
 
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ucwords(strtolower($value));
+    }
+
     public function family()
     {
         return $this->belongsTo(Family::class,'family_id','id');

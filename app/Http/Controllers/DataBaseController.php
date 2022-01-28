@@ -26,11 +26,12 @@ class DataBaseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-}
+    }
+
     public function importStore(Request $request)
     {
-       // dd($request->get('reeplay'));
-        if(ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() && $request->get('reeplay') != 'on'){
+        // dd($request->get('reeplay'));
+        if (ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() && $request->get('reeplay') != 'on') {
 
             return redirect('/home')->with('status','Esta base de datos ya existe si desea reemplazar marque el check');
         }
@@ -49,7 +50,7 @@ class DataBaseController extends Controller
     public function reportWord(Request $request)
     {
         $sysconf=Farm::find($request->get('farm_id'));
-Log::info(json_encode($sysconf));
+        Log::info(json_encode($sysconf));
         $phpWord=new PhpWord;
         // Establecer el estilo predeterminado
         $phpWord->setDefaultFontName('Times New Roma');                              //Fuente
@@ -64,53 +65,53 @@ Log::info(json_encode($sysconf));
         $styleFont=['spaceAfter'=>60,'name'=>'Times New Roma','size'=>10];
         $section->addTOC($styleFont,$styleTOC);
         /**
-
-        //Estilo por Defecto
-        $section->addText('Proyecto SIEPAC',['size'=>16,'bold'=>true]);
-        $section->addTextBreak();// Salto de línea
-        $section->addText('Inventario de Predios del Tramo 16',['size'=>16]);
-        $section->addTextBreak();// Salto de línea
-
-
-        $section->addText('Informe del Predio '.$sysconf->id_predio,['size'=>14,'bold'=>true]);
-        $section->addTextBreak();// Salto de línea
-        $section->addText($sysconf->owner,['size'=>14,'bold'=>true]);
-        $section->addTextBreak();// Salto de línea
-        $section->addTextBreak();// Salto de línea
-        $section->addTextBreak();// Salto de línea
-        $section->addText('Elaborado por:',['size'=>14]);
-        $section->addText('Ing. Álvaro Sibaja Villegas',['size'=>14]);
-        $section->addTextBreak(7);// Salto de línea
-
-
-        $section->addText('San José, Costa Rica ',['size'=>14]);
-
-        $section->addTextBreak(5);// Salto de línea
-
-        $section->addText('1. Consideraciones generales',['bold'=>true]);
-        $section->addTextBreak();// Salto de línea
-        $fontStyle=new \PhpOffice\PhpWord\Style\Font;
-        $fontStyle->setAuto(true);
-        $fontStyle->setName('Tahoma');
-        $fontStyle->setSize(13);
-        $myTextElement=$section->addText('Los datos base para la elaboración del presente informe se obtuvieron
-         en primer lugar de la información proporcionada por el Ing. Allan Montoya, que comprende los shapefile de los predios, líneas de tensión, torres y servidumbres; en segundo lugar, se necesitó recolectar datos de campo para conocer la ubicación y características de las especies dentro y fuera de la servidumbre.  En el inventario se ubicaron todos los árboles con un diámetro normal mayor a 15 cm, los cuales se georreferenciaron con un GPS Garmin 64s.');
-        $myTextElement->setFontStyle($fontStyle);
-
-
-        $section->addText('A continuación, se presenta la nomenclatura utilizada en el presente informe.');
-
-
-    $nameScien = ForestDataBase::where('farm_id',$sysconf->id)->groupBy('name_cientifict')->count();
-         $section->addText('El inventario forestal registró 	'.$nameScien.'
-especies diferentes, distribuidas en	10
- familias. Un total de
-71	individuos fueron medidos, de estos	58	 pertenecientes a especies con valor comercial,
-mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sumaron en total
-6.754	m2,  además, se encontró un volumen comercial (Vc) de	6.414	m3 y el volumen total
- (Vt) alcanzó 	56.269	m3 (Cuadro 1).
-');*/
-         $styleTable=[
+         *
+         * //Estilo por Defecto
+         * $section->addText('Proyecto SIEPAC',['size'=>16,'bold'=>true]);
+         * $section->addTextBreak();// Salto de línea
+         * $section->addText('Inventario de Predios del Tramo 16',['size'=>16]);
+         * $section->addTextBreak();// Salto de línea
+         *
+         *
+         * $section->addText('Informe del Predio '.$sysconf->id_predio,['size'=>14,'bold'=>true]);
+         * $section->addTextBreak();// Salto de línea
+         * $section->addText($sysconf->owner,['size'=>14,'bold'=>true]);
+         * $section->addTextBreak();// Salto de línea
+         * $section->addTextBreak();// Salto de línea
+         * $section->addTextBreak();// Salto de línea
+         * $section->addText('Elaborado por:',['size'=>14]);
+         * $section->addText('Ing. Álvaro Sibaja Villegas',['size'=>14]);
+         * $section->addTextBreak(7);// Salto de línea
+         *
+         *
+         * $section->addText('San José, Costa Rica ',['size'=>14]);
+         *
+         * $section->addTextBreak(5);// Salto de línea
+         *
+         * $section->addText('1. Consideraciones generales',['bold'=>true]);
+         * $section->addTextBreak();// Salto de línea
+         * $fontStyle=new \PhpOffice\PhpWord\Style\Font;
+         * $fontStyle->setAuto(true);
+         * $fontStyle->setName('Tahoma');
+         * $fontStyle->setSize(13);
+         * $myTextElement=$section->addText('Los datos base para la elaboración del presente informe se obtuvieron
+         * en primer lugar de la información proporcionada por el Ing. Allan Montoya, que comprende los shapefile de los predios, líneas de tensión, torres y servidumbres; en segundo lugar, se necesitó recolectar datos de campo para conocer la ubicación y características de las especies dentro y fuera de la servidumbre.  En el inventario se ubicaron todos los árboles con un diámetro normal mayor a 15 cm, los cuales se georreferenciaron con un GPS Garmin 64s.');
+         * $myTextElement->setFontStyle($fontStyle);
+         *
+         *
+         * $section->addText('A continuación, se presenta la nomenclatura utilizada en el presente informe.');
+         *
+         *
+         * $nameScien = ForestDataBase::where('farm_id',$sysconf->id)->groupBy('name_cientifict')->count();
+         * $section->addText('El inventario forestal registró    '.$nameScien.'
+         * especies diferentes, distribuidas en    10
+         * familias. Un total de
+         * 71    individuos fueron medidos, de estos    58     pertenecientes a especies con valor comercial,
+         * mientras que    13    a especies sin valor comercial. Las áreas basimétricas (g) sumaron en total
+         * 6.754    m2,  además, se encontró un volumen comercial (Vc) de    6.414    m3 y el volumen total
+         * (Vt) alcanzó    56.269    m3 (Cuadro 1).
+         * ');*/
+        $styleTable=[
             'borderSize'       =>1,
             'borderTopColor'   =>'1A446C',
             'borderRightColor' =>'FFFFFF',
@@ -212,7 +213,7 @@ mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sum
         $styleFont=['spaceAfter'=>60,'name'=>'Times New Roma','size'=>10];
         $section->addTOC($styleFont,$styleTOC);
 
-         $styleTable=[
+        $styleTable=[
             'borderSize'       =>1,
             'borderTopColor'   =>'1A446C',
             'borderRightColor' =>'FFFFFF',
@@ -251,51 +252,53 @@ mientras que	13	a especies sin valor comercial. Las áreas basimétricas (g) sum
         /**
          * cuadro 2
          */
-        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 3
          */
-        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 4
          */
-        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 5
          */
-        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 6
          */
-        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 7
          */
-        $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 8
          */
-        $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false);
+        $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 8
          */
-        $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+        $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
 
         // El documento generado es Word2007
         $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
-        $writer->save('reporteDos.docx');
+        $writer->save('reporte_'.$sysconf->id_predio.'_dos.docx');
 
-return redirect()->back();
+        return redirect()->back();
     }
-    public function boxWordNive( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord){
+
+    public function boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord)
+    {
         $section->addText('Anexo 1. Árboles inventariados en el Predio  '.$sysconf->id_predio);
         $section->addTextBreak();// Salto de línea
 
@@ -305,30 +308,30 @@ return redirect()->back();
         $table=$section->addTable('Anexo1');
         $table->addRow(5);// Altura de línea 400
         $table->addCell(500)->addText('Vano',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Árbol',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Families',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Nombre Científico',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Nombre común',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Cobertura',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Comercial',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Servidumbre',['bold'=>true,'size'=>9]);
-          $table->addCell(500)->addText('Área de Protección',['bold' =>true,'size'=>9]);
+        $table->addCell(500)->addText('Árbol',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Families',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Nombre Científico',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Nombre común',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Cobertura',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Comercial',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Servidumbre',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Área de Protección',['bold'=>true,'size'=>9]);
         $table->addCell(500)->addText('Dap (cm)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Ht (m)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Hc (m)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('G (m²)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Vt (m²)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Vc (m²)',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Coord X',['bold'=>true,'size'=>9]);
-         $table->addCell(500)->addText('Coord Y',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Ht (m)',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Hc (m)',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('G (m²)',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Vt (m²)',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Vc (m²)',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Coord X',['bold'=>true,'size'=>9]);
+        $table->addCell(500)->addText('Coord Y',['bold'=>true,'size'=>9]);
 
 
-        $datas = ForestDataBase::where('farm_id',$sysconf->id)->orderBy('name_cientifict','ASC')->get();
+        $datas=ForestDataBase::where('farm_id',$sysconf->id)->orderBy('name_cientifict','ASC')->get();
 
-        foreach ($datas AS $data){
+        foreach ($datas AS $data) {
             $table->addRow(5);// Altura de línea 400
             $table->addCell(500)->addText($data->vano,['bold'=>true,'size'=>9]);
-            $table->addCell(500)->addText($data->tree,['bold' =>true,'size'=>9]);
+            $table->addCell(500)->addText($data->tree,['bold'=>true,'size'=>9]);
             $table->addCell(500)->addText($data->family,['bold'=>true,'size'=>9]);
             $table->addCell(500)->addText($data->name_cientifict,['bold'=>true,'size'=>9]);
             $table->addCell(500)->addText($data->name_common,['bold'=>true,'size'=>9]);
@@ -347,13 +350,15 @@ return redirect()->back();
         }
 
     }
-    public function boxWordEight( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report = true)
+
+    public function boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
     {
-        if($report) {
+        if ($report) {
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles ubicados en Área de Protección del Predio '.$sysconf->id_predio);
-        }else{
+        } else {
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles en Áreas de Protección dentro de la servidumbre del Predio '.$sysconf->id_predio);
-      }  $section->addTextBreak();// Salto de línea
+        }
+        $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
         $section->addTextBreak();// Salto de línea
 
@@ -490,17 +495,21 @@ return redirect()->back();
 
 
     }
-    public function boxWordSeven( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
+
+    public function boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero = 0)
     {
         /**
          * Cuadro 7
          */
         $section->addTextBreak();// Salto de línea
-        if($report) {
+        if ($report && $numero == 0) {
             $section->addText('Cuadro 7. Distribución diamétrica (cm) del volumen total (m3) de árboles ubicados en Área de Protección del Predio '.$sysconf->id_predio);
-        }else{
+        } elseif (!$report && $numero == 0) {
             $section->addText('Cuadro 7. Distribución diamétrica (cm) del volumen total (m3) de árboles en Área de Protección dentro de la servidumbre del Predio '.$sysconf->id_predio);
-        }$section->addTextBreak();// Salto de línea
+        }elseif ( $numero == 3) {
+            $section->addText('Cuadro 14. Distribución diamétrica (cm) del volumen total (m3) de árboles en Área de Protección fuera de la servidumbre del Predio '.$sysconf->id_predio);
+        }
+        $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
         $section->addTextBreak();// Salto de línea
 
@@ -536,7 +545,11 @@ return redirect()->back();
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            if($report && $numero == 0){
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }else{
+                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
@@ -650,7 +663,13 @@ return redirect()->back();
 
         $box2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
         foreach ($box2 AS $item) {
+            if($report && $numero == 0){
             $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }elseif(!$report && $numero == 0){
+            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }elseif($numero ==3){
+            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
@@ -753,9 +772,9 @@ return redirect()->back();
         $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
         $table->addRow(5);// Altura de línea 400
-        $table->addCell(2000)->addText('Total General',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
-                                                        'size'            =>8,'unit'=>TblWidth::TWIP,
-                                                        'borderLeftColor' =>'FFFFFF','borderRightColor'=>'FFFFFF']);
+        $table->addCell(2000)->addText('Total General',['vMerge'         =>true,'bold'=>true,'vAlign'=>'both',
+                                                        'size'           =>8,'unit'=>TblWidth::TWIP,
+                                                        'borderLeftColor'=>'FFFFFF','borderRightColor'=>'FFFFFF']);
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText($column2 + $columns2,['bold'       =>true,'size'=>8,
@@ -778,17 +797,21 @@ return redirect()->back();
                                                                'exactHeight'=>600]);
 
     }
-    public function boxWordSix( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
+
+    public function boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero=0)
     {
         /**
          * Cuadro 6
          */
         $section->addTextBreak();// Salto de línea
-        if($report) {
+        if ($report && $numero==0) {
             $section->addText('Cuadro 6. Distribución diamétrica (cm) del número de árboles ubicados en Área de Protección del Predio '.$sysconf->id_predio);
-        }else {
+        } elseif (!$report && $numero==0) {
             $section->addText('Cuadro 6. Distribución diamétrica (cm) del número de árboles en Área de Protección dentro de la servidumbre del Predio '.$sysconf->id_predio);
-        } $section->addTextBreak();// Salto de línea
+        }elseif ( $numero==3) {
+            $section->addText('Cuadro 13. Distribución diamétrica (cm) del número de árboles en Área de Protección fuera de la servidumbre del Predio '.$sysconf->id_predio);
+        }
+        $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
         $section->addTextBreak();// Salto de línea
 
@@ -827,10 +850,12 @@ return redirect()->back();
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            if($report) {
+            if ($report && $numero==0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
-            }else{
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            } elseif (!$report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            }elseif ($numero==3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
@@ -841,7 +866,7 @@ return redirect()->back();
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-               $diez=round(ForestDataBase::whereBetween('dap',[0,
+                $diez=round(ForestDataBase::whereBetween('dap',[0,
                     19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
@@ -945,8 +970,13 @@ return redirect()->back();
 
         $box2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
         foreach ($box2 AS $item) {
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
-            if ($total > 0) {
+            if ($report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            } elseif (!$report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            }elseif ($numero==3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            }if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
@@ -1047,9 +1077,9 @@ return redirect()->back();
         $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
         $table->addRow(5);// Altura de línea 400
-        $table->addCell(2000)->addText('Total General',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
-                                                        'size'            =>8,'unit'=>TblWidth::TWIP,
-                                                        'borderLeftColor' =>'FFFFFF','borderRightColor'=>'FFFFFF']);
+        $table->addCell(2000)->addText('Total General',['vMerge'         =>true,'bold'=>true,'vAlign'=>'both',
+                                                        'size'           =>8,'unit'=>TblWidth::TWIP,
+                                                        'borderLeftColor'=>'FFFFFF','borderRightColor'=>'FFFFFF']);
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText($column2 + $columns2,['bold'       =>true,'size'=>8,
@@ -1072,16 +1102,20 @@ return redirect()->back();
                                                                'exactHeight'=>600]);
 
     }
-    public function boxWordFive( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true){
+
+    public function boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero=0)
+    {
 
         /**
          * Cuadro 5
          */
 
-        if($report) {
+        if ($report && $numero==0) {
             $section->addText('Cuadro 5. Distribución diamétrica (cm) del volumen comercial (m3) de los árboles en el Predio '.$sysconf->id_predio);
-        }else{
+        } elseif (!$report && $numero==0) {
             $section->addText('Cuadro 5. Distribución diamétrica (cm) del volumen comercial (m3) de los árboles dentro de la servidumbre del Predio  '.$sysconf->id_predio);
+        }elseif ($numero==3) {
+            $section->addText('Cuadro 12. Distribución diamétrica (cm) del volumen comercial (m3) de los árboles fuera de la servidumbre del Predio  '.$sysconf->id_predio);
         }
         $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
@@ -1120,11 +1154,14 @@ return redirect()->back();
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            if($report) {
+            if ($report && $numero==0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
-            }else{
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
-            } if ($total > 0) {
+            } elseif (!$report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+            }elseif ($numero==3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+            }
+            if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
@@ -1222,16 +1259,22 @@ return redirect()->back();
         $table->addCell(2000)->addText($column9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($column12,['bold'=>true,'size'=>8]);
     }
-    public function boxWordFour( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
+
+    public function boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero=0)
     {
         /**
          * Cuadro 4
          */
-if($report) {
-    $section->addText('Cuadro 4. Distribución diamétrica (cm) del volumen total (m3) de los árboles del Predio '.$sysconf->id_predio);
-}else {
-    $section->addText('Cuadro 4. Distribución diamétrica (cm) del volumen total (m3) de los árboles dentro del servidumbre en el Predio  '.$sysconf->id_predio);
-}  $section->addTextBreak();// Salto de línea
+        if ($report && $numero == 0) {
+            $section->addText('Cuadro 4. Distribución diamétrica (cm) del volumen total (m3) de los árboles del Predio '.$sysconf->id_predio);
+        } elseif (!$report && $numero == 0) {
+            $section->addText('Cuadro 4. Distribución diamétrica (cm) del volumen total (m3) de los árboles dentro del servidumbre en el Predio  '.$sysconf->id_predio);
+        } elseif ($numero == 3) {
+            $section->addText('Cuadro 11. Distribución diamétrica (cm) del volumen total (m3) de los árboles fuera de la servidumbre en el Predio  '.$sysconf->id_predio);
+        }
+
+
+        $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
         $section->addTextBreak();// Salto de línea
 
@@ -1267,12 +1310,14 @@ if($report) {
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            if($report){
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-        }else{
-        $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-    }
-        if ($total > 0) {
+            if ($report && $numero == 0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            } elseif (!$report && $numero == 0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            } elseif ($numero == 3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }
+            if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
@@ -1386,11 +1431,13 @@ if($report) {
 
         $box2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
         foreach ($box2 AS $item) {
-           if($report) {
-               $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-           }else{
-               $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-          }
+            if ($report && $numero == 0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            } elseif (!$report && $numero == 0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            } elseif ($numero == 3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
@@ -1400,7 +1447,7 @@ if($report) {
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-               $diez=round(ForestDataBase::whereBetween('dap',[10,
+                $diez=round(ForestDataBase::whereBetween('dap',[10,
                     19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
@@ -1493,9 +1540,9 @@ if($report) {
         $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
         $table->addRow(5);// Altura de línea 400
-        $table->addCell(2000)->addText('Total General',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
-                                                        'size'            =>8,'unit'=>TblWidth::TWIP,
-                                                        'borderLeftColor' =>'FFFFFF','borderRightColor'=>'FFFFFF']);
+        $table->addCell(2000)->addText('Total General',['vMerge'         =>true,'bold'=>true,'vAlign'=>'both',
+                                                        'size'           =>8,'unit'=>TblWidth::TWIP,
+                                                        'borderLeftColor'=>'FFFFFF','borderRightColor'=>'FFFFFF']);
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText($column2 + $columns2,['bold'       =>true,'size'=>8,
@@ -1518,7 +1565,9 @@ if($report) {
                                                                'exactHeight'=>600]);
 
     }
-    public function boxWordOne( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$styleFirstColumn){
+
+    public function boxWordOne($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$styleFirstColumn)
+    {
         $section->addText('Cuadro 1. Resumen de los individuos encontrados en el predio '.$sysconf->id_predio);
         $section->addTextBreak();// Salto de línea
 
@@ -1666,14 +1715,18 @@ if($report) {
                                                                                                                    'width'    =>600]);
 
     }
-    public function boxWordTwo( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true){
+
+    public function boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero=0)
+    {
         /**
          * Cuadro 2
          */
-        if($report) {
+        if ($report && $numero == 0) {
             $section->addText('Cuadro 2. Distribución diamétrica (cm) del número de árboles en el Predio '.$sysconf->id_predio);
-        }else{
-            $section->addText('Cuadro 2. Distribución diamétrica (cm) del número de árboles dentro de la servidumbre del Predio '.$sysconf->id_predio);
+        } elseif (!$report && $numero == 0) {
+            $section->addText('CCuadro 2 Distribución diamétrica (cm) del número de árboles dentro de la servidumbre del Predio '.$sysconf->id_predio);
+        } elseif ($numero == 3) {
+            $section->addText('Cuadro 9. Distribución diamétrica (cm) del número de árboles fuera de la servidumbre del Predio '.$sysconf->id_predio);
         }
         $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
@@ -1708,13 +1761,15 @@ if($report) {
         $column9=0;
         $column12=0;
 
-            $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
+        $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            if($report) {
+            if ($report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
-            }else{
+            } elseif (!$report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count();
+            } elseif ($numero == 3) {
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count();
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -1826,16 +1881,18 @@ if($report) {
         $columns9=0;
         $columns12=0;
 
-            $boxNotComercial2 = ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
-
+        $boxNotComercial2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
 
 
         foreach ($boxNotComercial2 AS $item) {
-            if($report) {
+            if ($report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
-            }else{
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count();
-}
+            } elseif (!$report && $numero == 0) {
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count();
+            } elseif ($numero == 3) {
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count();
+            }
+
             if ($total > 0) {
 
                 $table->addRow(400);// Altura de línea 400
@@ -1939,9 +1996,9 @@ if($report) {
         $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
         $table->addRow(400);// Altura de línea 400
-        $table->addCell(4000)->addText('Total General',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
-                                                        'size'            =>8,'unit'=>TblWidth::TWIP,
-                                                        'borderLeftColor' =>'FFFFFF','borderRightColor'=>'FFFFFF']);
+        $table->addCell(4000)->addText('Total General',['vMerge'         =>true,'bold'=>true,'vAlign'=>'both',
+                                                        'size'           =>8,'unit'=>TblWidth::TWIP,
+                                                        'borderLeftColor'=>'FFFFFF','borderRightColor'=>'FFFFFF']);
         $table->addCell(4000)->addText('');
         $table->addCell(4000)->addText('');
         $table->addCell(2000)->addText($column2 + $columns2,['bold'       =>true,'size'=>8,
@@ -1967,17 +2024,21 @@ if($report) {
          * fin cuadro 2
          */
     }
-    public function boxWordThree( $sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
+
+
+    public function boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero=0)
     {
 
         /**
          * Cuadro 3
          */
-if($report) {
-    $section->addText('Cuadro 3 Distribución diamétrica (cm) de la sumatoria de áreas basimétricas (m2) de los árboles del Predio '.$sysconf->id_predio);
-}else{
-    $section->addText('Cuadro 3 Distribución diamétrica (cm) del área basal (m2) de los árboles dentro de la servidumbre del Predio '.$sysconf->id_predio);
-}
+        if ($report && $numero == 0) {
+            $section->addText('Cuadro 3 Distribución diamétrica (cm) de la sumatoria de áreas basimétricas (m2) de los árboles del Predio '.$sysconf->id_predio);
+        } elseif (!$report && $numero == 0) {
+            $section->addText('Cuadro 3 Distribución diamétrica (cm) del área basal (m2) de los árboles dentro de la servidumbre del Predio '.$sysconf->id_predio);
+        } elseif ($numero == 3) {
+            $section->addText('Cuadro 10. Distribución diamétrica (cm) del área basal (m2) de los árboles fuera de la servidumbre del Predio '.$sysconf->id_predio);
+        }
         $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
         $section->addTextBreak();// Salto de línea
@@ -2014,10 +2075,12 @@ if($report) {
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            if($report) {
+            if ($report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
-            }else{
+            } elseif (!$report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+            } elseif ($numero == 3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -2133,10 +2196,12 @@ if($report) {
 
         $box2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
         foreach ($box2 AS $item) {
-            if($report) {
+            if ($report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
-            }else{
+            } elseif (!$report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+            } elseif ($numero == 3) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -2241,9 +2306,9 @@ if($report) {
         $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
         $table->addRow(400);// Altura de línea 400
-        $table->addCell(4000)->addText('Total General',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
-                                                        'size'            =>8,'unit'=>TblWidth::TWIP,
-                                                        'borderLeftColor' =>'FFFFFF','borderRightColor'=>'FFFFFF']);
+        $table->addCell(4000)->addText('Total General',['vMerge'         =>true,'bold'=>true,'vAlign'=>'both',
+                                                        'size'           =>8,'unit'=>TblWidth::TWIP,
+                                                        'borderLeftColor'=>'FFFFFF','borderRightColor'=>'FFFFFF']);
         $table->addCell(4000)->addText('');
         $table->addCell(4000)->addText('');
         $table->addCell(2000)->addText($column2 + $columns2,['bold'       =>true,'size'=>8,
@@ -2268,6 +2333,7 @@ if($report) {
          * fin cuadro 3
          */
     }
+
     public function importFamily(Request $request)
     {
         $file=$request->file();

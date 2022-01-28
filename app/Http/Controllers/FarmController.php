@@ -16,6 +16,10 @@ use PhpOffice\PhpWord\SimpleType\TblWidth;
 
 class FarmController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function createFamily()
     {
         return view('Families.create');
@@ -34,7 +38,7 @@ class FarmController extends Controller
 
     public function createScientific()
     {
-        $scientifics = ScientificName::orderBy('name')->get();
+        $scientifics = Family::orderBy('name')->get();
         return view('NameScientific.create',compact('scientifics'));
     }
 
@@ -64,7 +68,7 @@ class FarmController extends Controller
 
     public function listsCommon()
     {
-        $list=CommonName::orderBy('name')->get();
+        $list= CommonName::orderBy('name')->get();
         return view('NameCommon.lists',compact('list'));
     }
 
@@ -73,5 +77,100 @@ class FarmController extends Controller
     {
         $list=ScientificName::orderBy('name')->get();
         return view('NameScientific.lists',compact('list'));
+    }
+
+    public function storeFamily(Request $request){
+
+        if(Family::where('name',$request->get('name'))->count()==0){
+            $family = new Family();
+            $family->name = $request->get('name');
+            $family->save();
+
+            return redirect('/registro-de-familias')->with('status','Se ha guardado con éxito');
+        }
+        return redirect('/registro-de-familias')->with('statusError','La Familia ya existe');
+    }
+
+    public function editFarm($id)
+    {
+        $family = Family::findOrFail($id);
+        return view('Families.edit',compact('family'));
+    }
+
+    public function updateFarm(Request $request, $id)
+    {
+        $family = Family::findOrFail($id);
+        $family->name=$request->get('name');
+        $family->save();
+
+
+            return redirect('/lista-de-familias')->with('status','Se ha actualizado con éxito');
+
+    }
+
+    public function storeCommon(Request $request){
+
+        if(CommonName::where('name',$request->get('name'))->count()==0){
+            $family = new CommonName();
+            $family->scientific_name_id = $request->get('scientific_name_id');
+            $family->name = $request->get('name');
+            $family->save();
+
+            return redirect('/registro-de-nombre-comun')->with('status','Se ha guardado con éxito');
+        }
+        return redirect('/registro-de-nombre-comun')->with('statusError','El nombre común ya existe');
+    }
+
+    public function editCommon($id)
+    {
+        $common = CommonName::findOrFail($id);
+        $scientifics = ScientificName::orderBy('name')->get();
+        return view('NameCommon.edit',compact('common','scientifics'));
+    }
+
+    public function updateCommon(Request $request, $id)
+    {
+        $family = CommonName::findOrFail($id);
+        $family->name=$request->get('name');
+        $family->scientific_name_id = $request->get('scientific_name_id');
+        $family->save();
+
+
+        return redirect('/lista-de-nombre-comun')->with('status','Se ha actualizado con éxito');
+
+    }
+
+    public function storeScientific (Request $request){
+
+        if(ScientificName::where('name',$request->get('name'))->count()==0){
+            $family = new ScientificName();
+            $family->family_id = $request->get('family_id');
+            $family->name = $request->get('name');
+            $family->commercial = $request->get('commercial');
+            $family->save();
+
+            return redirect('/registro-de-nombre-cientifico')->with('status','Se ha guardado con éxito');
+        }
+        return redirect('/registro-de-nombre-cientifico')->with('statusError','El nombre común ya existe');
+    }
+
+    public function editScientific($id)
+    {
+        $scientific = ScientificName::findOrFail($id);
+        $family = Family::orderBy('name')->get();
+        return view('NameScientific.edit',compact('family','scientific'));
+    }
+
+    public function updateScientific(Request $request, $id)
+    {
+        $family = ScientificName::findOrFail($id);
+        $family->family_id = $request->get('family_id');
+        $family->name = $request->get('name');
+        $family->commercial = $request->get('commercial');
+        $family->save();
+
+
+        return redirect('/lista-de-nombre-cientifico')->with('status','Se ha actualizado con éxito');
+
     }
 }
