@@ -17,9 +17,9 @@
                                 <form action="{{route('data_familia')}}" method="post" enctype="multipart/form-data">
                                     <div class="form-group">{{csrf_field()}}
                                         <label>Base de datos</label>
-                                        <input type="file" id="data_familia" name="data_base" disabled class="form-control">
+                                        <input type="file" id="data_familia" name="data_base"  class="form-control">
                                     </div>
-                                    <button disabled type="submit" class="btn-success btn">importar</button>
+                                    <button  type="submit" class="btn-success btn">importar</button>
                                 </form>
                             </div>
                             <div class="col-md-4 col-sm-12 button-menu">
