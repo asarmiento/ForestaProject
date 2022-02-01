@@ -252,42 +252,77 @@ class DataBaseController extends Controller
         /**
          * cuadro 2
          */
-        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 3
          */
-        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 4
          */
-        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 5
          */
-        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 6
          */
-        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
         $section->addTextBreak();// Salto de línea
         /**
          * cuadro 7
          */
+        $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 8
+         */
+        $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,0);
+        $section->addTextBreak();// Salto de línea
+/**
+         * cuadro 9
+         */
+        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 10
+         */
+        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 11
+         */
+        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 12
+         */
+        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 13
+         */
+        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $section->addTextBreak();// Salto de línea
+        /**
+         * cuadro 14
+         */
         $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
         /**
-         * cuadro 8
+         * cuadro 15
          */
         $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
         $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 8
+         /**
+         * cuadro 16
          */
-        $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,false,3);
+        $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
         $section->addTextBreak();// Salto de línea
 
         // El documento generado es Word2007
