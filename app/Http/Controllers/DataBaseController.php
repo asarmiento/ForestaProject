@@ -351,12 +351,14 @@ class DataBaseController extends Controller
 
     }
 
-    public function boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true)
+    public function boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$report=true,$numero = 0)
     {
-        if ($report) {
+        if ($report && $numero==0) {
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles ubicados en Área de Protección del Predio '.$sysconf->id_predio);
-        } else {
+        } elseif ($report && $numero==0) {
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles en Áreas de Protección dentro de la servidumbre del Predio '.$sysconf->id_predio);
+        }else {
+            $section->addText('Cuadro 15. Distribución diamétrica (cm) del volumen comercial (m3) de árboles en Área de Protección dentro de la servidumbre del Predio  '.$sysconf->id_predio);
         }
         $section->addTextBreak();// Salto de línea
         $section->addText('Distribución diamétrica (cm)');
@@ -393,7 +395,14 @@ class DataBaseController extends Controller
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
         foreach ($box2 AS $item) {
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+            if($report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+            }elseif(!$report && $numero==0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+            }elseif( $numero==3)
+            {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+          }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
@@ -404,16 +413,26 @@ class DataBaseController extends Controller
                                                                              'size'  =>9,
                                                                              'width' =>600]);
 
-                $diez=round(ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -421,8 +440,13 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -430,8 +454,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -439,17 +468,27 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
-                if ($cincuenta == 0) {
+                if($report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
+                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -457,8 +496,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -466,7 +510,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero==3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -547,8 +597,10 @@ class DataBaseController extends Controller
         foreach ($box2 AS $item) {
             if($report && $numero == 0){
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-            }else{
-                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }elseif(!$report && $numero == 0){
+                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }elseif( $numero == 3){
+                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
@@ -559,17 +611,26 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $diez= round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $diez= round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $veinte= round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $veinte= round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -577,8 +638,13 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $treinta= round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $treinta= round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -586,8 +652,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $cuarenta= round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $cuarenta= round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -595,8 +666,13 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $cincuenta= round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $cincuenta= round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -604,8 +680,13 @@ class DataBaseController extends Controller
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $sesenta= round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $sesenta= round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -613,8 +694,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $setenta= round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $setenta= round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -622,7 +708,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $ochenta= round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $ochenta= round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -664,11 +756,11 @@ class DataBaseController extends Controller
         $box2=ScientificName::where('commercial',0)->orderBy('name','ASC')->get();
         foreach ($box2 AS $item) {
             if($report && $numero == 0){
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
             }elseif(!$report && $numero == 0){
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
-            }elseif($numero ==3){
-            $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+            }elseif( $numero == 3){
+                $total= round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
@@ -679,81 +771,121 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $diez= round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $diez= round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $columns2+=$diez;
+                    $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $veinte= round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $veinte= round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $columns3+=$veinte;
+                    $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $treinta= round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $treinta= round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns4+=$treinta;
+                    $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $cuarenta= round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $cuarenta= round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $columns5+=$cuarenta;
+                    $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $cincuenta= round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $cincuenta= round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $columns6+=$cincuenta;
+                    $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $sesenta= round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $sesenta= round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns7+=$sesenta;
+                    $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $setenta= round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $setenta= round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns8+=$setenta;
+                    $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if($report && $numero == 0){
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif(!$report && $numero == 0){
+                    $ochenta= round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }elseif( $numero == 3){
+                    $ochenta= round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns9+=$ochenta;
+                    $column9+=$ochenta;
                 }
-
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $columns12+=$total;
-            }
+                $column12+=$total;
 
+            }
         }
         $table->addRow(5);// Altura de línea 400
         $table->addCell(2000)->addText('Subtotal No Comercial',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
@@ -853,9 +985,9 @@ class DataBaseController extends Controller
             if ($report && $numero==0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             } elseif (!$report && $numero==0) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             }elseif ($numero==3) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
@@ -866,16 +998,26 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-                $diez=round(ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -883,8 +1025,13 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -892,8 +1039,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -901,8 +1053,13 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -910,8 +1067,13 @@ class DataBaseController extends Controller
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -919,8 +1081,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -928,7 +1095,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -973,10 +1146,11 @@ class DataBaseController extends Controller
             if ($report && $numero==0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             } elseif (!$report && $numero==0) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
             }elseif ($numero==3) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
-            }if ($total > 0) {
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+            }
+            if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
@@ -985,80 +1159,122 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-                $diez=round(ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $columns2+=$diez;
+                    $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $columns3+=$veinte;
+                    $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns4+=$treinta;
+                    $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $columns5+=$cuarenta;
+                    $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $columns6+=$cincuenta;
+                    $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns7+=$sesenta;
+                    $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns8+=$setenta;
+                    $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns9+=$ochenta;
+                    $column9+=$ochenta;
                 }
-                $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $columns12+=$total;
-            }
 
+                $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
+                $column12+=$total;
+
+            }
         }
         $table->addRow(5);// Altura de línea 400
         $table->addCell(2000)->addText('Subtotal No Comercial',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
@@ -1170,16 +1386,26 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-                $diez=round(ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[0, 19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20, 29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1187,8 +1413,14 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+
+                if ($report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1196,8 +1428,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1205,8 +1442,13 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1214,8 +1456,13 @@ class DataBaseController extends Controller
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1223,8 +1470,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1232,7 +1484,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero==0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }elseif ($numero==3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1327,16 +1585,26 @@ class DataBaseController extends Controller
                                                                              'size'  =>9,
                                                                              'width' =>600]);
 
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1344,8 +1612,13 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1353,8 +1626,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1362,8 +1640,13 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1371,8 +1654,13 @@ class DataBaseController extends Controller
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1380,8 +1668,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1389,7 +1682,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1447,81 +1746,123 @@ class DataBaseController extends Controller
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+
+                if ($report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $columns2+=$diez;
+                    $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $columns3+=$veinte;
+                    $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns4+=$treinta;
+                    $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $columns5+=$cuarenta;
+                    $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $columns6+=$cincuenta;
+                    $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns7+=$sesenta;
+                    $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns8+=$setenta;
+                    $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns9+=$ochenta;
+                    $column9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $columns12+=$total;
-            }
+                $column12+=$total;
 
+            }
         }
         $table->addRow(5);// Altura de línea 400
         $table->addCell(2000)->addText('Subtotal No Comercial',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
@@ -1767,9 +2108,9 @@ class DataBaseController extends Controller
             if ($report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
             } elseif (!$report && $numero == 0) {
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count();
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
             } elseif ($numero == 3) {
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count();
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -1780,17 +2121,26 @@ class DataBaseController extends Controller
                 $table->addCell(1000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>300]);
-
-                $diez=ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
-                if ($diez == 0) {
+                if ($report && $numero == 0) {
+                $diez=ForestDataBase::whereBetween('dap',[0, 19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $diez=ForestDataBase::whereBetween('dap',[0, 19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $diez=ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
+                    if ($diez == 0) {
                     $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(50)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($veinte == 0) {
                     $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1798,8 +2148,13 @@ class DataBaseController extends Controller
                                                           'width'    =>300]);
                     $column3+=$veinte;
                 }
-                $treinta=ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($treinta == 0) {
                     $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1807,8 +2162,13 @@ class DataBaseController extends Controller
                                                            'width'    =>300]);
                     $column4+=$treinta;
                 }
-                $cuarenta=ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1816,8 +2176,13 @@ class DataBaseController extends Controller
                                                               'width'    =>300]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1825,8 +2190,13 @@ class DataBaseController extends Controller
                                                                'width'    =>300]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1834,8 +2204,13 @@ class DataBaseController extends Controller
                                                              'width'    =>300]);
                     $column7+=$sesenta;
                 }
-                $setenta=ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1843,7 +2218,13 @@ class DataBaseController extends Controller
                                                              'width'    =>300]);
                     $column8+=$setenta;
                 }
-                $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -1888,96 +2269,135 @@ class DataBaseController extends Controller
             if ($report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
             } elseif (!$report && $numero == 0) {
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count();
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
             } elseif ($numero == 3) {
-                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count();
+                $total=ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
             }
-
             if ($total > 0) {
-
                 $table->addRow(400);// Altura de línea 400
-                $table->addCell(50)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
-                                                                  'exactHeight'=>300]);
-                $table->addCell(50)->addText($item->name,['vAlign'=>'center','size'=>8,
-                                                          'width' =>300]);
-                $table->addCell(50)->addText($item->common->first()->name,['vAlign'=>'center',
-                                                                           'size'  =>9,
-                                                                           'width' =>300]);
-
-                $diez=ForestDataBase::whereBetween('dap',[0,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                $table->addCell(1000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
+                                                                    'exactHeight'=>300]);
+                $table->addCell(1000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                                                            'width' =>300]);
+                $table->addCell(1000)->addText($item->common->first()->name,['vAlign'=>'center',
+                                                                             'size'  =>9,
+                                                                             'width' =>300]);
+                if ($report && $numero == 0) {
+                    $diez=ForestDataBase::whereBetween('dap',[0, 19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $diez=ForestDataBase::whereBetween('dap',[0, 19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $diez=ForestDataBase::whereBetween('dap',[0,19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($diez == 0) {
-                    $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
+                    $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
-                    $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $columns2+=$diez;
+                    $table->addCell(50)->addText($diez,['alignment'=>'center','size'=>8]);
+                    $column2+=$diez;
                 }
-                $veinte=ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($veinte == 0) {
-                    $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
+                    $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
-                    $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
-                                                            'width'    =>300]);
-                    $columns3+=$veinte;
+                    $table->addCell(50)->addText($veinte,['alignment'=>'center','size'=>8,
+                                                          'width'    =>300]);
+                    $column3+=$veinte;
                 }
-                $treinta=ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($treinta == 0) {
-                    $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
+                    $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
-                    $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
-                                                             'width'    =>300]);
-                    $columns4+=$treinta;
+                    $table->addCell(50)->addText($treinta,['alignment'=>'center','size'=>8,
+                                                           'width'    =>300]);
+                    $column4+=$treinta;
                 }
-                $cuarenta=ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>300]);
-                    $columns5+=$cuarenta;
+                    $column5+=$cuarenta;
                 }
-                $cincuenta=ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>300]);
-                    $columns6+=$cincuenta;
+                    $column6+=$cincuenta;
                 }
-                $sesenta=ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $columns7+=$sesenta;
+                    $column7+=$sesenta;
                 }
-                $setenta=ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $columns8+=$setenta;
+                    $column8+=$setenta;
                 }
-                $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                if ($report && $numero == 0) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->count('dap');
+                } elseif ($numero == 3) {
+                    $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->count('dap');
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $columns9+=$ochenta;
+                    $column9+=$ochenta;
                 }
-                $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $columns12+=$total;
-            }
 
+                $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
+                $column12+=$total;
+
+            }
         }
         $table->addRow(400);// Altura de línea 400
         $table->addCell(4000)->addText('Subtotal No Comercial',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
@@ -2078,9 +2498,9 @@ class DataBaseController extends Controller
             if ($report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             } elseif (!$report && $numero == 0) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             } elseif ($numero == 3) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -2091,17 +2511,26 @@ class DataBaseController extends Controller
                 $table->addCell(4000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10, 19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
                     $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20, 29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2109,8 +2538,13 @@ class DataBaseController extends Controller
                                                             'width'    =>600]);
                     $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30, 39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2118,8 +2552,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40, 49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2127,8 +2566,13 @@ class DataBaseController extends Controller
                                                               'width'    =>600]);
                     $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50, 59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2136,8 +2580,13 @@ class DataBaseController extends Controller
                                                                'width'    =>600]);
                     $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60, 69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2145,8 +2594,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2154,7 +2608,13 @@ class DataBaseController extends Controller
                                                              'width'    =>600]);
                     $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
@@ -2199,9 +2659,9 @@ class DataBaseController extends Controller
             if ($report && $numero == 0) {
                 $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             } elseif (!$report && $numero == 0) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             } elseif ($numero == 3) {
-                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('protection_area','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                $total=round(ForestDataBase::where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
             }
             if ($total > 0) {
                 $table->addRow(400);// Altura de línea 400
@@ -2212,82 +2672,122 @@ class DataBaseController extends Controller
                 $table->addCell(4000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
-
-                $diez=round(ForestDataBase::whereBetween('dap',[10,
-                    19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10,19])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $diez=round(ForestDataBase::whereBetween('dap',[10, 19])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($diez == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $columns2+=$diez;
+                    $column2+=$diez;
                 }
-                $veinte=round(ForestDataBase::whereBetween('dap',[20,
-                    29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $veinte=round(ForestDataBase::whereBetween('dap',[20, 29])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($veinte == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $columns3+=$veinte;
+                    $column3+=$veinte;
                 }
-                $treinta=round(ForestDataBase::whereBetween('dap',[30,
-                    39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $treinta=round(ForestDataBase::whereBetween('dap',[30, 39])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($treinta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns4+=$treinta;
+                    $column4+=$treinta;
                 }
-                $cuarenta=round(ForestDataBase::whereBetween('dap',[40,
-                    49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cuarenta=round(ForestDataBase::whereBetween('dap',[40, 49])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cuarenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $columns5+=$cuarenta;
+                    $column5+=$cuarenta;
                 }
-                $cincuenta=round(ForestDataBase::whereBetween('dap',[50,
-                    59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $cincuenta=round(ForestDataBase::whereBetween('dap',[50, 59])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($cincuenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $columns6+=$cincuenta;
+                    $column6+=$cincuenta;
                 }
-                $sesenta=round(ForestDataBase::whereBetween('dap',[60,
-                    69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $sesenta=round(ForestDataBase::whereBetween('dap',[60, 69])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($sesenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns7+=$sesenta;
+                    $column7+=$sesenta;
                 }
-                $setenta=round(ForestDataBase::whereBetween('dap',[70,
-                    79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($setenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns8+=$setenta;
+                    $column8+=$setenta;
                 }
-                $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                if ($report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif (!$report && $numero == 0) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Dentro')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                } elseif ($numero == 3) {
+                    $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('servitude','Fuera')->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
+                }
                 if ($ochenta == 0) {
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $columns9+=$ochenta;
+                    $column9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $columns12+=$total;
-            }
+                $column12+=$total;
 
+            }
         }
         $table->addRow(400);// Altura de línea 400
         $table->addCell(4000)->addText('Subtotal No Comercial',['vMerge'          =>true,'bold'=>true,'vAlign'=>'both',
