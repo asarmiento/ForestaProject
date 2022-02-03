@@ -54,4 +54,5 @@ Route::post('/data_base', [App\Http\Controllers\DataBaseController::class, 'impo
 Route::post('/data_familia', [App\Http\Controllers\DataBaseController::class, 'importFamily'])->name('data_familia');
 Route::post('/reports-word', [App\Http\Controllers\DataBaseController::class, 'reportWord'])->name('reportWord');
 Route::post('/reports-word-two', [App\Http\Controllers\DataBaseController::class, 'reportWordTwo'])->name('reportWordTwo');
+Route::get('/clear-files', [App\Http\Controllers\DataBaseController::class, 'clearFiles'])->name('clearFiles');
 

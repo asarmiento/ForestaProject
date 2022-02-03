@@ -76,6 +76,7 @@
                                     </div>
                                     <button type="submit" class="btn-success btn m-3">Generar</button>
                                 </form>
+                                 <a class="btn btn-danger" href="{{route('clearFiles')}}">Limpiar archivos</a>
                                 @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
                                     @if(file_exists('reporte_'.$data->id_predio.'_uno.docx'))
                                         <a class="btn btn-primary" href="{{asset('reporte_'.$data->id_predio.'_uno.docx')}}">Descargar {{$data->id_predio}}</a>

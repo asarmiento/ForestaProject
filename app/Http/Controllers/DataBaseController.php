@@ -13,6 +13,7 @@ use App\Models\ScientificName;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\IOFactory;
@@ -44,6 +45,19 @@ class DataBaseController extends Controller
         return redirect()->back();
     }
 
+    public function clearFiles()
+    {
+        //File::delete(File::glob('public/*.docx'));
+
+        $files = File::glob('*.docx'); //obtenemos todos los nombres de los ficheros
+       
+        foreach($files as $file){
+
+            if(is_file($file))
+                unlink($file); //elimino el fichero
+        }
+        return redirect()->back();
+    }
 
     public function reportWord(Request $request)
     {
