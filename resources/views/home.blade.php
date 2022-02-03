@@ -76,9 +76,11 @@
                                     </div>
                                     <button type="submit" class="btn-success btn m-3">Generar</button>
                                 </form>
-                                @if(file_exists('reporteUno.docx'))
-                                    <a class="btn btn-primary" href="{{asset('reporteUno.docx')}}">Descargar Archivo</a>
-                                @endif
+                                @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
+                                    @if(file_exists('reporte_'.$data->id_predio.'_uno.docx'))
+                                        <a class="btn btn-primary" href="{{asset('reporte_'.$data->id_predio.'_uno.docx')}}">Descargar {{$data->id_predio}}</a>
+                                    @endif
+                                @endforeach
                             </div>
                             <div class="col-md-4 col-sm-12 button-menu">
                                 <h1>Reporte de Tablas 2</h1>
@@ -94,9 +96,11 @@
                                     </div>
                                     <button type="submit" class="btn-success btn m-3">Generar</button>
                                 </form>
-                                @if(file_exists('reporteDos.docx'))
-                                    <a class="btn btn-primary" href="{{asset('reporteDos.docx')}}">Descargar Archivo</a>
+                                @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
+                                @if(file_exists('reporte_'.$data->id_predio.'_dos.docx'))
+                                    <a class="btn btn-primary" href="{{asset('reporte_'.$data->id_predio.'_dos.docx')}}">Descargar {{$data->id_predio}}</a>
                                 @endif
+                                @endforeach
                             </div>
                         </div>
                         <!-- Modal -->

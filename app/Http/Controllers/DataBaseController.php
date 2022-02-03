@@ -32,12 +32,10 @@ class DataBaseController extends Controller
     {
         // dd($request->get('reeplay'));
         if (ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() && $request->get('reeplay') != 'on') {
-
             return redirect('/home')->with('status','Esta base de datos ya existe si desea reemplazar marque el check');
         }
-        if (ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() > 0 && $request->get('reeplay') == 'on') {
-            DB::statement("DELETE FROM `forest_database` WHERE farm_id = ".$request->get('farm_id')." AND year =".Carbon::now()->year);
-            //ForestDataBase::where('farm_id',$this->farm)->where('year',Carbon::now()->year)->get()->destroy();
+        if (ForestDataBase::where('farm_id',$request->get('farm_id'))->where('year',Carbon::now()->year)->count() > 0 && $request->get('reeplay') == 'on' || $request->get('reeplay') == true) {
+            DB::statement("DELETE FROM `forest_database` WHERE `farm_id` = ".$request->get('farm_id')." AND `year` = ".Carbon::now()->year);
         }
         $file=$request->file();
         $import=new ImportNewExcelDataBase($request->get('farm_id'));
