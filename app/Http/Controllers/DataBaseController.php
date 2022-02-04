@@ -50,7 +50,7 @@ class DataBaseController extends Controller
         //File::delete(File::glob('public/*.docx'));
 
         $files = File::glob('*.docx'); //obtenemos todos los nombres de los ficheros
-       
+
         foreach($files as $file){
 
             if(is_file($file))
@@ -429,15 +429,15 @@ class DataBaseController extends Controller
         $table->addCell(2000)->addText('Total general',['bold'=>true,'size'=>9]);
 
 
-        $column2=0;
-        $column3=0;
-        $column4=0;
-        $column5=0;
-        $column6=0;
-        $column7=0;
-        $column8=0;
-        $column9=0;
-        $column12=0;
+        $columns2=0;
+        $columns3=0;
+        $columns4=0;
+        $columns5=0;
+        $columns6=0;
+        $columns7=0;
+        $columns8=0;
+        $columns9=0;
+        $columns12=0;
 
         $box2=ScientificName::where('commercial',1)->orderBy('name','ASC')->get();
 
@@ -471,7 +471,7 @@ class DataBaseController extends Controller
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if($report && $numero==0) {
                     $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -485,7 +485,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if($report && $numero==0) {
                     $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -499,7 +499,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if($report && $numero==0) {
                     $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -513,7 +513,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if($report && $numero==0) {
                     $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -527,7 +527,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if($report && $numero==0) {
                     $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -541,7 +541,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if($report && $numero==0) {
                     $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -555,7 +555,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if($report && $numero==0) {
                     $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vc_m'),3,PHP_ROUND_HALF_UP);
@@ -569,10 +569,10 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
@@ -580,15 +580,15 @@ class DataBaseController extends Controller
         $table->addCell(2000)->addText('Total General',['bold'=>true,'size'=>8]);
         $table->addCell(2000)->addText('');
         $table->addCell(2000)->addText('');
-        $table->addCell(2000)->addText($column2,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column3,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column4,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column5,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column6,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column7,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column8,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column9,['bold'=>true,'size'=>8]);
-        $table->addCell(2000)->addText($column12,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns2,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns3,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns4,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns5,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns6,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns7,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns8,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns9,['bold'=>true,'size'=>8]);
+        $table->addCell(2000)->addText($columns12,['bold'=>true,'size'=>8]);
 
 
     }
@@ -829,7 +829,7 @@ class DataBaseController extends Controller
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if($report && $numero == 0){
                     $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -843,7 +843,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if($report && $numero == 0){
                     $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -857,7 +857,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if($report && $numero == 0){
                     $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -871,7 +871,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if($report && $numero == 0){
                     $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -885,7 +885,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if($report && $numero == 0){
                     $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -899,7 +899,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if($report && $numero == 0){
                     $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -913,7 +913,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if($report && $numero == 0){
                     $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -927,10 +927,10 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
@@ -1217,7 +1217,7 @@ class DataBaseController extends Controller
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if ($report && $numero==0) {
                     $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1231,7 +1231,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if ($report && $numero==0) {
                     $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1245,7 +1245,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if ($report && $numero==0) {
                     $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1259,7 +1259,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if ($report && $numero==0) {
                     $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1273,7 +1273,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if ($report && $numero==0) {
                     $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1287,7 +1287,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if ($report && $numero==0) {
                     $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1301,7 +1301,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if ($report && $numero==0) {
                     $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('protection_area','Dentro')->where('farm_id',$sysconf->id)->count('dap'),3,PHP_ROUND_HALF_UP);
@@ -1315,11 +1315,11 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
@@ -1805,7 +1805,7 @@ class DataBaseController extends Controller
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if ($report && $numero == 0) {
                     $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1819,7 +1819,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if ($report && $numero == 0) {
                     $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1833,7 +1833,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if ($report && $numero == 0) {
                     $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1847,7 +1847,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if ($report && $numero == 0) {
                     $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1861,7 +1861,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if ($report && $numero == 0) {
                     $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1875,7 +1875,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if ($report && $numero == 0) {
                     $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1889,7 +1889,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if ($report && $numero == 0) {
                     $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('vt_m'),3,PHP_ROUND_HALF_UP);
@@ -1903,11 +1903,11 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
@@ -2340,7 +2340,7 @@ class DataBaseController extends Controller
                     $table->addCell(50)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(50)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if ($report && $numero == 0) {
                     $veinte=ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2354,7 +2354,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(50)->addText($veinte,['alignment'=>'center','size'=>8,
                                                           'width'    =>300]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if ($report && $numero == 0) {
                     $treinta=ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2368,7 +2368,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(50)->addText($treinta,['alignment'=>'center','size'=>8,
                                                            'width'    =>300]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if ($report && $numero == 0) {
                     $cuarenta=ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2382,7 +2382,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>300]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if ($report && $numero == 0) {
                     $cincuenta=ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2396,7 +2396,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>300]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if ($report && $numero == 0) {
                     $sesenta=ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2410,7 +2410,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if ($report && $numero == 0) {
                     $setenta=ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2424,7 +2424,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if ($report && $numero == 0) {
                     $ochenta=ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
@@ -2438,11 +2438,11 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>300]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
@@ -2730,7 +2730,7 @@ class DataBaseController extends Controller
                     $table->addCell(2000)->addText('',['alignment'=>'center','size'=>8]);
                 } else {
                     $table->addCell(2000)->addText($diez,['alignment'=>'center','size'=>8]);
-                    $column2+=$diez;
+                    $columns2+=$diez;
                 }
                 if ($report && $numero == 0) {
                     $veinte=round(ForestDataBase::whereBetween('dap',[20,29])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2744,7 +2744,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($veinte,['alignment'=>'center','size'=>8,
                                                             'width'    =>600]);
-                    $column3+=$veinte;
+                    $columns3+=$veinte;
                 }
                 if ($report && $numero == 0) {
                     $treinta=round(ForestDataBase::whereBetween('dap',[30,39])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2758,7 +2758,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($treinta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column4+=$treinta;
+                    $columns4+=$treinta;
                 }
                 if ($report && $numero == 0) {
                     $cuarenta=round(ForestDataBase::whereBetween('dap',[40,49])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2772,7 +2772,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cuarenta,['alignment'=>'center','size'=>8,
                                                               'width'    =>600]);
-                    $column5+=$cuarenta;
+                    $columns5+=$cuarenta;
                 }
                 if ($report && $numero == 0) {
                     $cincuenta=round(ForestDataBase::whereBetween('dap',[50,59])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2786,7 +2786,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($cincuenta,['alignment'=>'center','size'=>8,
                                                                'width'    =>600]);
-                    $column6+=$cincuenta;
+                    $columns6+=$cincuenta;
                 }
                 if ($report && $numero == 0) {
                     $sesenta=round(ForestDataBase::whereBetween('dap',[60,69])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2800,7 +2800,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($sesenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column7+=$sesenta;
+                    $columns7+=$sesenta;
                 }
                 if ($report && $numero == 0) {
                     $setenta=round(ForestDataBase::whereBetween('dap',[70,79])->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2814,7 +2814,7 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($setenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column8+=$setenta;
+                    $columns8+=$setenta;
                 }
                 if ($report && $numero == 0) {
                     $ochenta=round(ForestDataBase::where('dap','>=',80)->where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->sum('g_m'),3,PHP_ROUND_HALF_UP);
@@ -2828,11 +2828,11 @@ class DataBaseController extends Controller
                 } else {
                     $table->addCell(2000)->addText($ochenta,['alignment'=>'center','size'=>8,
                                                              'width'    =>600]);
-                    $column9+=$ochenta;
+                    $columns9+=$ochenta;
                 }
 
                 $table->addCell(2000)->addText($total,['bold'=>true,'size'=>8]);
-                $column12+=$total;
+                $columns12+=$total;
 
             }
         }
