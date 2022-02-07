@@ -452,11 +452,11 @@ class DataBaseController extends Controller
           }
             if ($total > 0) {
                 $table->addRow(5);// Altura de línea 400
-                $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst($item->family->name),['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
-                $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
+                $table->addCell(2000)->addText(ucfirst($item->common->first()->name),['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>600]);
 
@@ -653,7 +653,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -813,7 +813,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -1040,7 +1040,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -1201,7 +1201,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -1428,7 +1428,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -1626,7 +1626,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -1788,7 +1788,7 @@ class DataBaseController extends Controller
                 $table->addRow(5);// Altura de línea 400
                 $table->addCell(2000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(2000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(2000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(2000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -2163,7 +2163,7 @@ class DataBaseController extends Controller
                 $table->addRow(400);// Altura de línea 400
                 $table->addCell(1000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>300]);
-                $table->addCell(1000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(1000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>300]);
                 $table->addCell(1000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -2324,7 +2324,7 @@ class DataBaseController extends Controller
                 $table->addRow(400);// Altura de línea 400
                 $table->addCell(1000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>300]);
-                $table->addCell(1000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(1000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>300]);
                 $table->addCell(1000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -2553,7 +2553,7 @@ class DataBaseController extends Controller
                 $table->addRow(400);// Altura de línea 400
                 $table->addCell(4000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(4000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(4000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(4000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
@@ -2714,7 +2714,7 @@ class DataBaseController extends Controller
                 $table->addRow(400);// Altura de línea 400
                 $table->addCell(4000)->addText($item->family->name,['vAlign'     =>'center','size'=>8,
                                                                     'exactHeight'=>600]);
-                $table->addCell(4000)->addText($item->name,['vAlign'=>'center','size'=>8,
+                $table->addCell(4000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>600]);
                 $table->addCell(4000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
