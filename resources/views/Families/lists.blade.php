@@ -22,7 +22,7 @@
             <tr>
                 <td>{{$key+1}}</td>
                 <td>{{$item->name}}</td>
-                <td><a class="btn btn-primary btn-sm" href="{{route('edit-farm',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                <td><a class="btn btn-primary btn-sm" href="{{route('edit-fam',$item->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
             </tr>
             @endforeach
             </tbody>

@@ -43,10 +43,16 @@ Route::put('/update-common/{id}', [App\Http\Controllers\FarmController::class, '
  */
 
 Route::post('/store-family', [App\Http\Controllers\FarmController::class, 'storeFamily'])->name('store-family');
-Route::get('/registro-de-nueva-finca', [App\Http\Controllers\FarmController::class, 'createFarm'])->name('get-farm');
-Route::get('/registro-de-nueva-finca/{id}/edit', [App\Http\Controllers\FarmController::class, 'editFarm'])->name('edit-farm');
-Route::put('/registro-de-nueva-finca/{id}', [App\Http\Controllers\FarmController::class, 'updateFarm'])->name('update-farm');
+Route::get('/editar-familia/{id}/edit', [App\Http\Controllers\FarmController::class, 'editFam'])->name('edit-fam');
+Route::put('/update-family/{id}', [App\Http\Controllers\FarmController::class, 'updateFam'])->name('update-fam');
+
+
+Route::get('/editar-finca/{id}/edit', [App\Http\Controllers\FarmController::class, 'editFarm'])->name('edit-farms');
+Route::put('/actualizar-finca/{id}', [App\Http\Controllers\FarmController::class, 'updateFarms'])->name('update-farms');
 Route::get('/lista-de-fincas', [App\Http\Controllers\FarmController::class, 'listsFarms'])->name('listFarms');
+Route::get('/registro-de-nueva-finca', [App\Http\Controllers\FarmController::class, 'createFarm'])->name('get-farm');
+Route::post('/store-farm', [App\Http\Controllers\FarmController::class, 'storeFarm'])->name('store-farm');
+
 
 
 Route::post('/data_route', [App\Http\Controllers\FarmController::class, 'importStore'])->name('data_route');

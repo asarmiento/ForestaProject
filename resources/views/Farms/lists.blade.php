@@ -26,7 +26,7 @@
                                     <td>{{$item->id_predio}}</td>
                                     <td>{{$item->owner}}</td>
                                         <td>{{$item->database->count()}}</td>
-                                    <td><a class="btn btn-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                                    <td><a href="{{route('edit-farms',$item->id)}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
                                 </tr>
                             @endforeach
                             </tbody>

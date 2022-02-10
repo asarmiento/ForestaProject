@@ -91,13 +91,13 @@ class FarmController extends Controller
         return redirect('/registro-de-familias')->with('statusError','La Familia ya existe');
     }
 
-    public function editFarm($id)
+    public function editFam($id)
     {
         $family = Family::findOrFail($id);
         return view('Families.edit',compact('family'));
     }
 
-    public function updateFarm(Request $request, $id)
+    public function updateFam(Request $request, $id)
     {
         $family = Family::findOrFail($id);
         $family->name=$request->get('name');
@@ -105,6 +105,24 @@ class FarmController extends Controller
 
 
             return redirect('/lista-de-familias')->with('status','Se ha actualizado con éxito');
+
+    }
+
+    public function editFarm($id)
+    {
+        $farm  = Farm::findOrFail($id);
+        return view('Farms.edit',compact('farm'));
+    }
+
+    public function updateFarms(Request $request, $id)
+    {
+        $data = $request->all();
+        $family = Farm::findOrFail($id);
+        $family->fill($data);
+        $family->save();
+
+
+            return redirect('/lista-de-fincas')->with('status','Se ha actualizado con éxito');
 
     }
 
@@ -119,6 +137,18 @@ class FarmController extends Controller
             return redirect('/registro-de-nombre-comun')->with('status','Se ha guardado con éxito');
         }
         return redirect('/registro-de-nombre-comun')->with('statusError','El nombre común ya existe');
+    }
+
+    public function storeFarm(Request $request){
+$data = $request->all();
+        if(Farm::where('id_predio',$request->get('id_predio'))->count()==0){
+            $family = new Farm();
+            $family->fill($data);
+            $family->save();
+
+            return redirect('/registro-de-nueva-finca')->with('status','Se ha guardado con éxito');
+        }
+        return redirect('/registro-de-nueva-finca')->with('statusError','El Id de Predio ya existe');
     }
 
     public function editCommon($id)

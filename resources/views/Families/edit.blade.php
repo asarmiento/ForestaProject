@@ -8,7 +8,7 @@
                     <div class="card-header">{{ __('Actualizar de Familias Nuevas') }}</div>
 
                     <div class="card-body">
-        <form method="post" action="{{route('update-farm',$family->id)}}">
+        <form method="post" action="{{route('update-fam',$family->id)}}">
             @method('put')
             <div class="col-md-6">{{csrf_field()}}
                 <label>Nombre de Familia</label>
