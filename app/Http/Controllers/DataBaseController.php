@@ -404,7 +404,7 @@ class DataBaseController extends Controller
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles ubicados en Área de Protección del Predio '.$sysconf->id_predio);
         } elseif ($report && $numero==0) {
             $section->addText('Cuadro 8. Distribución diamétrica (cm) del volumen comercial (m3) de árboles en Áreas de Protección dentro de la servidumbre del Predio '.$sysconf->id_predio);
-        }else {
+        }elseif( $numero==3) {
             $section->addText('Cuadro 15. Distribución diamétrica (cm) del volumen comercial (m3) de árboles en Área de Protección dentro de la servidumbre del Predio  '.$sysconf->id_predio);
         }
         $section->addTextBreak();// Salto de línea
