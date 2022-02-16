@@ -128,19 +128,19 @@ class FarmController extends Controller
 
     public function storeCommon(Request $request){
 
-        if(CommonName::where('name',$request->get('name'))->count()==0){
+
             $family = new CommonName();
             $family->scientific_name_id = $request->get('scientific_name_id');
             $family->name = $request->get('name');
             $family->save();
 
             return redirect('/registro-de-nombre-comun')->with('status','Se ha guardado con éxito');
-        }
+
         return redirect('/registro-de-nombre-comun')->with('statusError','El nombre común ya existe');
     }
 
     public function storeFarm(Request $request){
-$data = $request->all();
+        $data = $request->all();
         if(Farm::where('id_predio',$request->get('id_predio'))->count()==0){
             $family = new Farm();
             $family->fill($data);
