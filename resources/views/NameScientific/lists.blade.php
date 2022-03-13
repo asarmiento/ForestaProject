@@ -15,6 +15,7 @@
                 <th>id</th>
                 <th>Familia</th>
                 <th>Nombre</th>
+                <th>Nombre Común</th>
                 <th>Tipo</th>
                 <th>Acción</th>
             </tr>
@@ -25,6 +26,11 @@
                 <td>{{$key+1}}</td>
                 <td>{{$item->family->name}}</td>
                 <td>{{$item->name}}</td>
+                @if($item->common->count()>0)
+                <td>{{$item->common->first()->name}}</td>
+                @else
+                <td class="text-danger " style="font-size: 24px">No tiene nombre común ligado</td>
+                @endif
                 @if($item->commercial)
                 <td>Comercial</td>
                 @else

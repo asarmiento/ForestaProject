@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
@@ -61,149 +62,154 @@ class DataBaseController extends Controller
 
     public function reportWord(Request $request)
     {
-        $sysconf=Farm::find($request->get('farm_id'));
-        Log::info(json_encode($sysconf));
-        $phpWord=new PhpWord;
-        // Establecer el estilo predeterminado
-        $phpWord->setDefaultFontName('Times New Roma');                              //Fuente
-        $phpWord->setDefaultFontSize(16);                                            //Tamaño de fuente
-        $phpWord->setDefaultParagraphStyle(['vAlign'=>'center']);                    //Tamaño de fuente
+        try {
+            $sysconf=Farm::find($request->get('farm_id'));
+            Log::info(json_encode($sysconf));
+            $phpWord=new PhpWord;
+            // Establecer el estilo predeterminado
+            $phpWord->setDefaultFontName('Times New Roma');                              //Fuente
+            $phpWord->setDefaultFontSize(16);                                            //Tamaño de fuente
+            $phpWord->setDefaultParagraphStyle(['vAlign'=>'center']);                    //Tamaño de fuente
 
-        //Añadir página
-        $section=$phpWord->createSection(['orientation'=>'landscape']);
+            //Añadir página
+            $section=$phpWord->createSection(['orientation'=>'landscape']);
 
-        // Agregar directorio
-        $styleTOC=['tabLeader'=>\PhpOffice\PhpWord\Style\TOC::TABLEADER_DOT];
-        $styleFont=['spaceAfter'=>60,'name'=>'Times New Roma','size'=>10];
-        $section->addTOC($styleFont,$styleTOC);
-        /**
-         *
-         * //Estilo por Defecto
-         * $section->addText('Proyecto SIEPAC',['size'=>16,'bold'=>true]);
-         * $section->addTextBreak();// Salto de línea
-         * $section->addText('Inventario de Predios del Tramo 16',['size'=>16]);
-         * $section->addTextBreak();// Salto de línea
-         *
-         *
-         * $section->addText('Informe del Predio '.$sysconf->id_predio,['size'=>14,'bold'=>true]);
-         * $section->addTextBreak();// Salto de línea
-         * $section->addText($sysconf->owner,['size'=>14,'bold'=>true]);
-         * $section->addTextBreak();// Salto de línea
-         * $section->addTextBreak();// Salto de línea
-         * $section->addTextBreak();// Salto de línea
-         * $section->addText('Elaborado por:',['size'=>14]);
-         * $section->addText('Ing. Álvaro Sibaja Villegas',['size'=>14]);
-         * $section->addTextBreak(7);// Salto de línea
-         *
-         *
-         * $section->addText('San José, Costa Rica ',['size'=>14]);
-         *
-         * $section->addTextBreak(5);// Salto de línea
-         *
-         * $section->addText('1. Consideraciones generales',['bold'=>true]);
-         * $section->addTextBreak();// Salto de línea
-         * $fontStyle=new \PhpOffice\PhpWord\Style\Font;
-         * $fontStyle->setAuto(true);
-         * $fontStyle->setName('Tahoma');
-         * $fontStyle->setSize(13);
-         * $myTextElement=$section->addText('Los datos base para la elaboración del presente informe se obtuvieron
-         * en primer lugar de la información proporcionada por el Ing. Allan Montoya, que comprende los shapefile de los predios, líneas de tensión, torres y servidumbres; en segundo lugar, se necesitó recolectar datos de campo para conocer la ubicación y características de las especies dentro y fuera de la servidumbre.  En el inventario se ubicaron todos los árboles con un diámetro normal mayor a 15 cm, los cuales se georreferenciaron con un GPS Garmin 64s.');
-         * $myTextElement->setFontStyle($fontStyle);
-         *
-         *
-         * $section->addText('A continuación, se presenta la nomenclatura utilizada en el presente informe.');
-         *
-         *
-         * $nameScien = ForestDataBase::where('farm_id',$sysconf->id)->groupBy('name_cientifict')->count();
-         * $section->addText('El inventario forestal registró    '.$nameScien.'
-         * especies diferentes, distribuidas en    10
-         * familias. Un total de
-         * 71    individuos fueron medidos, de estos    58     pertenecientes a especies con valor comercial,
-         * mientras que    13    a especies sin valor comercial. Las áreas basimétricas (g) sumaron en total
-         * 6.754    m2,  además, se encontró un volumen comercial (Vc) de    6.414    m3 y el volumen total
-         * (Vt) alcanzó    56.269    m3 (Cuadro 1).
-         * ');*/
-        $styleTable=[
-            'borderSize'       =>1,
-            'borderTopColor'   =>'1A446C',
-            'borderRightColor' =>'FFFFFF',
-            'borderLeftColor'  =>'FFFFFF',
-            'borderBottomColor'=>'1A446C',
-            'bold'             =>true,
-            'cellMargin'       =>5,
-            'size'             =>10,
-            'width'            =>100,
-            'vAlign'           =>'center',
-        ];
-        $styleFirstRow=[
-            'borderSize'       =>1,
-            'borderTopColor'   =>'1A446C',
-            'borderRightColor' =>'FFFFFF',
-            'borderLeftColor'  =>'FFFFFF',
-            'borderBottomColor'=>'1A446C',
-            'textDirection'    =>'tbRl',
-            'vAlign'           =>'center'];
-        // Estilo de primera línea
-        $styleFirstColumn=[
-            'borderSize'       =>1,
-            'borderTopColor'   =>'FFFFFF',
-            'borderRightColor' =>'FFFFFF',
-            'borderLeftColor'  =>'FFFFFF',
-            'borderBottomColor'=>'1A446C',
-            'textDirection'    =>'tbRl',
-            'vAlign'           =>'center'];
-        // Estilo de primera línea
+            // Agregar directorio
+            $styleTOC=['tabLeader'=>\PhpOffice\PhpWord\Style\TOC::TABLEADER_DOT];
+            $styleFont=['spaceAfter'=>60,'name'=>'Times New Roma','size'=>10];
+            $section->addTOC($styleFont,$styleTOC);
+            /**
+             *
+             * //Estilo por Defecto
+             * $section->addText('Proyecto SIEPAC',['size'=>16,'bold'=>true]);
+             * $section->addTextBreak();// Salto de línea
+             * $section->addText('Inventario de Predios del Tramo 16',['size'=>16]);
+             * $section->addTextBreak();// Salto de línea
+             *
+             *
+             * $section->addText('Informe del Predio '.$sysconf->id_predio,['size'=>14,'bold'=>true]);
+             * $section->addTextBreak();// Salto de línea
+             * $section->addText($sysconf->owner,['size'=>14,'bold'=>true]);
+             * $section->addTextBreak();// Salto de línea
+             * $section->addTextBreak();// Salto de línea
+             * $section->addTextBreak();// Salto de línea
+             * $section->addText('Elaborado por:',['size'=>14]);
+             * $section->addText('Ing. Álvaro Sibaja Villegas',['size'=>14]);
+             * $section->addTextBreak(7);// Salto de línea
+             *
+             *
+             * $section->addText('San José, Costa Rica ',['size'=>14]);
+             *
+             * $section->addTextBreak(5);// Salto de línea
+             *
+             * $section->addText('1. Consideraciones generales',['bold'=>true]);
+             * $section->addTextBreak();// Salto de línea
+             * $fontStyle=new \PhpOffice\PhpWord\Style\Font;
+             * $fontStyle->setAuto(true);
+             * $fontStyle->setName('Tahoma');
+             * $fontStyle->setSize(13);
+             * $myTextElement=$section->addText('Los datos base para la elaboración del presente informe se obtuvieron
+             * en primer lugar de la información proporcionada por el Ing. Allan Montoya, que comprende los shapefile de los predios, líneas de tensión, torres y servidumbres; en segundo lugar, se necesitó recolectar datos de campo para conocer la ubicación y características de las especies dentro y fuera de la servidumbre.  En el inventario se ubicaron todos los árboles con un diámetro normal mayor a 15 cm, los cuales se georreferenciaron con un GPS Garmin 64s.');
+             * $myTextElement->setFontStyle($fontStyle);
+             *
+             *
+             * $section->addText('A continuación, se presenta la nomenclatura utilizada en el presente informe.');
+             *
+             *
+             * $nameScien = ForestDataBase::where('farm_id',$sysconf->id)->groupBy('name_cientifict')->count();
+             * $section->addText('El inventario forestal registró    '.$nameScien.'
+             * especies diferentes, distribuidas en    10
+             * familias. Un total de
+             * 71    individuos fueron medidos, de estos    58     pertenecientes a especies con valor comercial,
+             * mientras que    13    a especies sin valor comercial. Las áreas basimétricas (g) sumaron en total
+             * 6.754    m2,  además, se encontró un volumen comercial (Vc) de    6.414    m3 y el volumen total
+             * (Vt) alcanzó    56.269    m3 (Cuadro 1).
+             * ');*/
+            $styleTable=[
+                'borderSize'       =>1,
+                'borderTopColor'   =>'1A446C',
+                'borderRightColor' =>'FFFFFF',
+                'borderLeftColor'  =>'FFFFFF',
+                'borderBottomColor'=>'1A446C',
+                'bold'             =>true,
+                'cellMargin'       =>5,
+                'size'             =>10,
+                'width'            =>100,
+                'vAlign'           =>'center',
+            ];
+            $styleFirstRow=[
+                'borderSize'       =>1,
+                'borderTopColor'   =>'1A446C',
+                'borderRightColor' =>'FFFFFF',
+                'borderLeftColor'  =>'FFFFFF',
+                'borderBottomColor'=>'1A446C',
+                'textDirection'    =>'tbRl',
+                'vAlign'           =>'center'];
+            // Estilo de primera línea
+            $styleFirstColumn=[
+                'borderSize'       =>1,
+                'borderTopColor'   =>'FFFFFF',
+                'borderRightColor' =>'FFFFFF',
+                'borderLeftColor'  =>'FFFFFF',
+                'borderBottomColor'=>'1A446C',
+                'textDirection'    =>'tbRl',
+                'vAlign'           =>'center'];
+            // Estilo de primera línea
 
-        /**
-         * cuadro 1
-         */
-        $this->boxWordOne($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$styleFirstColumn);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 2
-         */
-        $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 3
-         */
-        $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 4
-         */
-        $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 5
-         */
-        $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 6
-         */
-        $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 7
-         */
-        $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 8
-         */
-        $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
-        /**
-         * cuadro 8
-         */
-        $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
-        $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 1
+             */
+            $this->boxWordOne($sysconf,$section,$styleTable,$styleFirstRow,$phpWord,$styleFirstColumn);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 2
+             */
+            $this->boxWordTwo($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 3
+             */
+            $this->boxWordThree($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 4
+             */
+            $this->boxWordFour($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 5
+             */
+            $this->boxWordFive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 6
+             */
+            $this->boxWordSix($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 7
+             */
+            $this->boxWordSeven($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 8
+             */
+            $this->boxWordEight($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
+            /**
+             * cuadro 8
+             */
+            $this->boxWordNive($sysconf,$section,$styleTable,$styleFirstRow,$phpWord);
+            $section->addTextBreak();// Salto de línea
 
-        // El documento generado es Word2007
-        $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
-        $writer->save('reporte_'.$sysconf->id_predio.'_uno.docx');
-        return redirect()->back();
+            // El documento generado es Word2007
+            $writer=\PhpOffice\PhpWord\IOFactory::createWriter($phpWord,'Word2007');
+            $writer->save('reporte_'.$sysconf->id_predio.'_uno.docx');
+            return redirect()->back();
+        }catch (\Exception $e){
+
+            return  Redirect::back()->withErrors(['msg' => 'Revise los nombres Científicos que tenga los nombres comunes agregado']);
+        }
 
     }
 
@@ -2313,6 +2319,7 @@ class DataBaseController extends Controller
 
 
         foreach ($boxNotComercial2 AS $item) {
+
             if ($report && $numero == 0) {
                 $total=ForestDataBase::where('name_cientifict',$item->name)->where('farm_id',$sysconf->id)->count();
             } elseif (!$report && $numero == 0) {
@@ -2326,6 +2333,7 @@ class DataBaseController extends Controller
                                                                     'exactHeight'=>300]);
                 $table->addCell(1000)->addText(ucfirst(strtolower($item->name)),['vAlign'=>'center','size'=>8,
                                                             'width' =>300]);
+
                 $table->addCell(1000)->addText($item->common->first()->name,['vAlign'=>'center',
                                                                              'size'  =>9,
                                                                              'width' =>300]);

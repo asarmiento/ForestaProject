@@ -75,6 +75,9 @@
                                         </select>
                                     </div>
                                     <button type="submit" class="btn-success btn m-3">Generar</button>
+                                    @if($errors->any())
+                                        <h4 class="text-danger">{{$errors->first()}}</h4>
+                                    @endif
                                 </form>
                                  <a class="btn btn-danger" href="{{route('clearFiles')}}">Limpiar archivos</a>
                                 @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
@@ -96,6 +99,9 @@
                                         </select>
                                     </div>
                                     <button type="submit" class="btn-success btn m-3">Generar</button>
+                                    @if($errors->any())
+                                        <h4 class="text-danger">{{$errors->first()}}</h4>
+                                    @endif
                                 </form>
                                 @foreach(\App\Models\Farm::orderBy('id_predio','ASC')->has('database')->get() AS $data)
                                 @if(file_exists('reporte_'.$data->id_predio.'_dos.docx'))
